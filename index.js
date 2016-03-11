@@ -61,6 +61,8 @@ function bowerResolveAll(bowerFile, baseopts) {
     }
 
     var deps = [];
+    
+    console.log("bower deps: " + bowerManifest.dependencies);
 
     _.forEach(bowerManifest.dependencies, function(value, key) {
     	console.log("key: " + key);
