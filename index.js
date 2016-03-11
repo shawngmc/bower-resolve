@@ -105,9 +105,12 @@ function bowerResolveSync(moduleArg, opts){
             } else {
                 moduleConfig = fs.readFileSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'));
             }
-            var relFilePath = thisModuleName.indexOf("/") === -1 ? null : thisModuleName + "." + fileExts[0];
+			var nameHasPath = thisModuleName.indexOf("/") === -1;
 			
-            if(moduleConfig){
+            var relFilePath = null; thisModuleName.indexOf("/") === -1 ? null : thisModuleName + "." + fileExts[0];
+			if(nameHasPath) {
+				relFilePath = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName + "." + fileExts[0]);
+			} else if(moduleConfig){
                 moduleConfig = JSON.parse(moduleConfig).main;
                 if(typeof moduleConfig == 'object'){
                     var temp;
@@ -122,8 +125,12 @@ function bowerResolveSync(moduleArg, opts){
                 } else if(typeof moduleConfig === 'string'){
                     relFilePath = moduleConfig;
                 }
-            }
-            return relFilePath !== null ? path.join(basePath, bowerDirRelPath, thisModuleName, relFilePath) : null;
+				
+				relFilePath = path.join(basePath, bowerDirRelPath, thisModuleName, relFilePath);
+            } else {
+				relFilePath = null;
+			}
+            return relFilePath;
         }
     }
 
