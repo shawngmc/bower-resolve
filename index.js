@@ -105,7 +105,8 @@ function bowerResolveSync(moduleArg, opts){
             } else {
                 moduleConfig = fs.readFileSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'));
             }
-            var relFilePath = null;
+            var relFilePath = thisModuleName.indexOf("/") === -1 ? null : thisModuleName + "." + fileExts[0];
+			
             if(moduleConfig){
                 moduleConfig = JSON.parse(moduleConfig).main;
                 if(typeof moduleConfig == 'object'){
