@@ -168,9 +168,9 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
         	// Last ditch effort. Try, in order, the following common approaches to naming. Lodash is espeically guilty of this one.
             } else {
             	var tryJsPaths = [];
+            	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName + ".js");
             	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, "dist", thisModuleName + ".min.js");
             	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, "dist", thisModuleName + ".js");
-            	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName + ".js");
             	console.log("No main section found, and no path in the name (' + thisModuleName + '). Searching for probable entry points...");
             	var foundJs = false;
             	_.forEach(tryJsPaths, function(tryJsPath) {
