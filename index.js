@@ -2,6 +2,7 @@ var path = require('path');
 var fs = require('fs');
 var path = require('path')
 var bower = require('bower');
+var _ = require('lodash');
 var bowerModules;
 
 function readBowerModules(cb) {
@@ -42,7 +43,6 @@ function fastReadBowerModules(moduleArg, opts,  cb){
     }, 0)
 
 }
-
 
 function bowerResolveSync(moduleArg, opts){
     var opts = opts || {},
@@ -105,11 +105,9 @@ function bowerResolveSync(moduleArg, opts){
             } else {
                 moduleConfig = fs.readFileSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'));
             }
-            var relFilePath = thisModuleName + "." + fileExts[0];
-
+            var relFilePath = null;
             if(moduleConfig){
                 moduleConfig = JSON.parse(moduleConfig).main;
-				console.log(moduleConfig);
                 if(typeof moduleConfig == 'object'){
                     var temp;
                     for(var j = 0; j < fileExts.length; j++){
@@ -124,7 +122,7 @@ function bowerResolveSync(moduleArg, opts){
                     relFilePath = moduleConfig;
                 }
             }
-            return path.join(basePath, bowerDirRelPath, thisModuleName, relFilePath);
+            return relFilePath !== null ? path.join(basePath, bowerDirRelPath, thisModuleName, relFilePath) : null;
         }
     }
 
