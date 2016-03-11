@@ -58,9 +58,9 @@ function bowerResolveAll(bowerManifest, baseopts) {
     _.forEach(bowerManifest.dependencies, function(value, key) {
     	console.log("key: " + key);
     	var newDeps = bowerResolveSync(key, value, baseopts);
-    	console.log("newDeps: " + newDeps);
+    	console.log("newDeps: " + JSON.stringify(newDeps));
         deps[key] = newDeps;
-        console.log("deps: " + deps);
+        console.log("deps: " + JSON.stringify(deps))
     });
 
     return deps;
