@@ -109,6 +109,7 @@ function bowerResolveSync(moduleArg, opts){
 
             if(moduleConfig){
                 moduleConfig = JSON.parse(moduleConfig).main;
+				console.log(moduleConfig);
                 if(typeof moduleConfig == 'object'){
                     var temp;
                     for(var j = 0; j < fileExts.length; j++){
@@ -127,7 +128,7 @@ function bowerResolveSync(moduleArg, opts){
         }
     }
 
-    return returnPath
+    return returnPath;
 }
 
 
