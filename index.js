@@ -50,17 +50,7 @@ function fastReadBowerModules(moduleArg, opts, cb) {
 
 }
 
-function bowerResolveAll(bowerFile, baseopts) {
-    console.log("bowerfile: " + bowerFile);
-    // Read the bower manifest
-    var bowerManifest = {};
-    try {
-        bowerManifest = require(bowerFile);
-    } catch (e) {
-    	console.log(e);
-        return [];
-    }
-
+function bowerResolveAll(bowerManifest, baseopts) {
     var deps = [];
     
     console.log("bower deps: " + bowerManifest.dependencies);
