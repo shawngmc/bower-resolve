@@ -51,7 +51,7 @@ function fastReadBowerModules(moduleArg, opts, cb) {
 }
 
 function bowerResolveAll(bowerManifest, baseopts) {
-    var deps = [];
+    var deps = {};
     
     console.log("bower deps: " + bowerManifest.dependencies);
 
