@@ -107,6 +107,7 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
 
         function getModulePaths(thisModuleName) {
             var moduleConfig;
+            var tempPath;
 
 			// Prefer the hidden config file, as it is the newer standard; only try to read files if they exist.
             if (fs.existsSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'))) {
@@ -124,16 +125,48 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
                 // If the main value is a object list, resolve all of them                
                 if (typeof mains === 'object') {
                     _.forEach(mains, function(subMain) {
-                        relFilePaths.push(path.join(basePath, bowerDirRelPath, thisModuleName, subMain));
+                    	tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, subMain);
+                    	if (fs.existsSync(tempPath)) {
+                        	relFilePaths.push(tempPath);
+                    	} else {
+	                    	console.log("Expected to find file at " + tempPath + "; trying dist interjection...");
+                    		// As a last ditch, we've seen some mains where the dist has been omitted. Try adding one.
+                    		tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, 'dist', subMain);
+	                    	if (fs.existsSync(tempPath)) {
+	                    		console.log("Found at " + tempPath + "...");
+	                        	relFilePaths.push(tempPath);
+	                    	} else {
+	                    		console.log("Could not find file at " + tempPath + "...");
+	                    	}
+                    	}
                     });
                     // If the main value is a string, resolve it
                 } else if (typeof mains === 'string') {
-                    relFilePaths.push(path.join(basePath, bowerDirRelPath, thisModuleName, mains));
+                    tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, mains);
+                    	if (fs.existsSync(tempPath)) {
+                        	relFilePaths.push(tempPath);
+                    	} else {
+                    		console.log("Expected to find file at " + tempPath + "; trying dist interjection...");
+                    		// As a last ditch, we've seen some mains where the dist has been omitted. Try adding one.
+                    		tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, 'dist', mains);
+	                    	if (fs.existsSync(tempPath)) {
+	                    		console.log("Found at " + tempPath + "...");
+	                        	relFilePaths.push(tempPath);
+	                    	} else {
+	                    		console.log("Could not find file at " + tempPath + "...");
+	                    	}
+                    	}
                 }
                 // if there is not a module config, but the name has a path, resolve it
             } else if (nameHasPath) {
-                relFilePaths.push(path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName));
+                tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName);
+            	if (fs.existsSync(tempPath)) {
+                	relFilePaths.push(tempPath);
+            	} else {
+            		console.log("Could not find file at " + tempPath + "...");
+            	}
             }
+            
             return relFilePaths;
         }
         // If there was no bower.json or .bower.json, it's probably a hard linked single javascript file.
