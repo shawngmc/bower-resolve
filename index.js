@@ -59,15 +59,13 @@ function bowerResolveAll(bowerFile, baseopts) {
         return [];
     }
 
-    var depList = [];
-    var addlList = null;
+    var deps = [];
 
     _.forEach(bowerManifest.dependencies, function(value, key) {
-        addlList = bowerResolveSync(key, value, baseopts);
-        depList = _.union(depList, addlList);
+        deps[key] = bowerResolveSync(key, value, baseopts);
     });
 
-    return depList;
+    return deps;
 }
 
 function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
