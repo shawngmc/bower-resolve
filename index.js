@@ -56,6 +56,7 @@ function bowerResolveAll(bowerFile, baseopts) {
     try {
         bowerManifest = require(bowerFile);
     } catch (e) {
+    	console.log(e);
         return [];
     }
 
