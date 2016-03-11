@@ -106,30 +106,37 @@ function bowerResolveSync(moduleArg, opts){
                 moduleConfig = fs.readFileSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'));
             }
 			var nameHasPath = thisModuleName.indexOf("/") === -1;
+			console.log(thisModuleName);
+            var relFilePath = null;
 			
-            var relFilePath = thisModuleName.indexOf("/") === -1 ? null : thisModuleName + "." + fileExts[0];
-			if(nameHasPath) {
-				relFilePath = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName + "." + fileExts[0]);
-			} else if(moduleConfig){
+			if(moduleConfig){
                 moduleConfig = JSON.parse(moduleConfig).main;
+				console.log(moduleConfig);
+				var subPath = null;
                 if(typeof moduleConfig == 'object'){
                     var temp;
                     for(var j = 0; j < fileExts.length; j++){
                         temp = arrFind(moduleConfig, new RegExp("." + fileExts[j] + "$"));
                         if(temp){
-                            relFilePath = temp;
+                            subPath = temp;
                             break;
                         }
                     }
 
                 } else if(typeof moduleConfig === 'string'){
-                    relFilePath = moduleConfig;
+                    subPath = moduleConfig;
                 }
-				
-				relFilePath = path.join(basePath, bowerDirRelPath, thisModuleName, relFilePath);
-            } else {
+				if (subPath) {
+					relFilePath = path.join(basePath, bowerDirRelPath, thisModuleName, subPath);
+				} else {
+					relFilePath = null;
+				}
+            } else if(nameHasPath) {
+				relFilePath = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName + "." + fileExts[0]);
+			} else {
 				relFilePath = null;
 			}
+			console.log("relFilePath: " + relFilePath);
             return relFilePath;
         }
     }
