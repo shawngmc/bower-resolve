@@ -140,7 +140,7 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
 	                    	}
                     	}
                     });
-                    // If the main value is a string, resolve it
+                // If the main value is a string, resolve it
                 } else if (typeof mains === 'string') {
                     tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, mains);
                     	if (fs.existsSync(tempPath)) {
@@ -157,13 +157,33 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
 	                    	}
                     	}
                 }
-                // if there is not a module config, but the name has a path, resolve it
+            // if there is not a module config, but the name has a path, resolve it
             } else if (nameHasPath) {
                 tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName);
             	if (fs.existsSync(tempPath)) {
                 	relFilePaths.push(tempPath);
             	} else {
             		console.log("Could not find file at " + tempPath + "...");
+            	}
+        	// Last ditch effort. Try, in order, the following common approaches to naming. Lodash is espeically guilty of this one.
+            } else {
+            	var tryJsPaths = [];
+            	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, "dist", thisModuleName + ".min.js");
+            	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, "dist", thisModuleName + ".js");
+            	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName + ".js");
+            	console.log("No main section found, and no path in the name (' + thisModuleName + '). Searching for probable entry points...");
+            	var foundJs = false;
+            	_.forEach(tryJsPaths, function(tryJsPath) {
+            		if (!foundJs && fs.existsSync(tryJsPath)) {
+            			console.log("Found probable non-preferred entry point at " + tryJsPath);
+            			relFilePaths.push(tryJsPath);
+            			foundJs = true;
+            		} else {
+            			console.log("Did not find a probable non-preferred entry point at " + tryJsPath);
+            		}
+            	});
+            	if (!foundJs) {
+            		console.log("Could not find a probable entry point for ' + thisModuleName + '.");
             	}
             }
             
