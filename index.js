@@ -122,7 +122,7 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
             	}
 
             }
-            var nameHasPath = thisModuleName.indexOf("/") === -1;
+            var nameHasPath = thisModuleName.indexOf("/") !== -1;
             console.log(thisModuleName);
             var relFilePaths = [];
 
@@ -185,12 +185,14 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
             	console.log("No main section found, and no path in the name (' + thisModuleName + '). Searching for probable entry points...");
             	var foundJs = false;
             	_.forEach(tryJsPaths, function(tryJsPath) {
-            		if (!foundJs && fs.existsSync(tryJsPath)) {
-            			console.log("Found probable non-preferred entry point at " + tryJsPath);
-            			relFilePaths.push(tryJsPath);
-            			foundJs = true;
-            		} else {
-            			console.log("Did not find a probable non-preferred entry point at " + tryJsPath);
+            		if (!foundJs) {
+            			if (fs.existsSync(tryJsPath)) {
+	            			console.log("Found probable non-preferred entry point at " + tryJsPath);
+	            			relFilePaths.push(tryJsPath);
+	            			foundJs = true;
+	            		} else {
+	            			console.log("Did not find a probable non-preferred entry point at " + tryJsPath);
+            			}
             		}
             	});
             	if (!foundJs) {
