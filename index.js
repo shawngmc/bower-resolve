@@ -129,7 +129,7 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
             if (moduleConfig) {
                 var mains = JSON.parse(moduleConfig).main;
 
-        		console.log("main: " + main);
+        		console.log("main: " + mains);
                 // If the main value is a object list, resolve all of them                
                 if (typeof mains === 'object') {
                     _.forEach(mains, function(subMain) {
