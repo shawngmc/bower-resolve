@@ -60,7 +60,7 @@ function bowerResolveAll(bowerManifest, baseopts) {
     	var newDeps = bowerResolveSync(key, value, baseopts);
     	console.log("newDeps: " + JSON.stringify(newDeps));
         deps[key] = newDeps;
-        console.log("deps: " + JSON.stringify(deps))
+        console.log("deps: " + JSON.stringify(deps));
     });
 
     return deps;
@@ -109,11 +109,18 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
             var moduleConfig;
             var tempPath;
 
-			// Prefer the hidden config file, as it is the newer standard; only try to read files if they exist.
-            if (fs.existsSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'))) {
-                moduleConfig = fs.readFileSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'));
-            } else if (fs.existsSync([basePath, bowerDirRelPath, thisModuleName, 'bower.json'].join('/'))) {
-                moduleConfig = fs.readFileSync([basePath, bowerDirRelPath, thisModuleName, 'bower.json'].join('/'));
+			// Prefer the hidden config file, as it is the newer standard; only try to read non-hidden files if they exist.
+			tempPath = [basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/');
+            if (fs.existsSync(tempPath)) {
+            	console.log("Found moduleConfig at " + tempPath + "...");
+                moduleConfig = fs.readFileSync(tempPath);
+            } else {
+            	tempPath = [basePath, bowerDirRelPath, thisModuleName, 'bower.json'].join('/');
+            	if (fs.existsSync(tempPath)) {
+                	console.log("Found moduleConfig at " + tempPath + "...");
+                	moduleConfig = fs.readFileSync(tempPath);
+            	}
+
             }
             var nameHasPath = thisModuleName.indexOf("/") === -1;
             console.log(thisModuleName);
@@ -122,6 +129,7 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
             if (moduleConfig) {
                 var mains = JSON.parse(moduleConfig).main;
 
+        		console.log("main: " + main);
                 // If the main value is a object list, resolve all of them                
                 if (typeof mains === 'object') {
                     _.forEach(mains, function(subMain) {
