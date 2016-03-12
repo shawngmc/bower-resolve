@@ -182,7 +182,8 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
             	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, thisModuleName + ".js");
             	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, "dist", thisModuleName + ".min.js");
             	tryJsPaths = path.join(basePath, bowerDirRelPath, thisModuleName, "dist", thisModuleName + ".js");
-            	console.log("No main section found, and no path in the name (' + thisModuleName + '). Searching for probable entry points...");
+            	console.log("No main section found, and no path in the name (" + thisModuleName + "). Searching for probable entry points...");
+            	console.log("tryJsPaths: " + tryJsPaths);
             	var foundJs = false;
             	_.forEach(tryJsPaths, function(tryJsPath) {
             		if (!foundJs) {
