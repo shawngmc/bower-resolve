@@ -126,13 +126,16 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
             console.log(thisModuleName);
             var relFilePaths = [];
 
+			var mainSegment = null;
             if (moduleConfig) {
-                var mains = JSON.parse(moduleConfig).main;
-
-        		console.log("main: " + mains);
+                mainSegment = JSON.parse(moduleConfig).main;
+        		console.log("main: " + mainSegment);
+			}
+			
+			if (mainSegment) {
                 // If the main value is a object list, resolve all of them                
-                if (typeof mains === 'object') {
-                    _.forEach(mains, function(subMain) {
+                if (typeof mainSegment === 'object') {
+                    _.forEach(mainSegment, function(subMain) {
                     	tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, subMain);
                     	if (fs.existsSync(tempPath)) {
                         	relFilePaths.push(tempPath);
@@ -149,14 +152,14 @@ function bowerResolveSync(moduleArg, moduleBowerRef, inOpts) {
                     	}
                     });
                 // If the main value is a string, resolve it
-                } else if (typeof mains === 'string') {
-                    tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, mains);
+                } else if (typeof mainSegment === 'string') {
+                    tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, mainSegment);
                     	if (fs.existsSync(tempPath)) {
                         	relFilePaths.push(tempPath);
                     	} else {
                     		console.log("Expected to find file at " + tempPath + "; trying dist interjection...");
                     		// As a last ditch, we've seen some mains where the dist has been omitted. Try adding one.
-                    		tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, 'dist', mains);
+                    		tempPath = path.join(basePath, bowerDirRelPath, thisModuleName, 'dist', mainSegment);
 	                    	if (fs.existsSync(tempPath)) {
 	                    		console.log("Found at " + tempPath + "...");
 	                        	relFilePaths.push(tempPath);
