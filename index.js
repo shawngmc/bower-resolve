@@ -106,12 +106,12 @@ function bowerResolveSync(moduleArg, opts){
                 moduleConfig = fs.readFileSync([basePath, bowerDirRelPath, thisModuleName, '.bower.json'].join('/'));
             }
 			var nameHasPath = thisModuleName.indexOf("/") === -1;
-			console.log(thisModuleName);
+			//console.log(thisModuleName);
             var relFilePath = null;
 			
 			if(moduleConfig){
                 moduleConfig = JSON.parse(moduleConfig).main;
-				console.log(moduleConfig);
+				//console.log(moduleConfig);
 				var subPath = null;
                 if(typeof moduleConfig == 'object'){
                     var temp;
@@ -136,7 +136,7 @@ function bowerResolveSync(moduleArg, opts){
 			} else {
 				relFilePath = null;
 			}
-			console.log("relFilePath: " + relFilePath);
+			//console.log("relFilePath: " + relFilePath);
             return relFilePath;
         }
     }
